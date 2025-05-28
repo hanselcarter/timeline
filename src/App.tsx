@@ -24,7 +24,7 @@ function App() {
       <section className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="bg-white rounded-2xl shadow-md p-6 border-t-4 border-blue-500">
           <h3 className="text-lg font-bold text-blue-800 mb-2">Effortless Drag &amp; Drop</h3>
-          <p className="text-gray-600">Move events on the timeline with smooth, precise drag-and-drop. No accidental shifts—just pure control.</p>
+          <p className="text-gray-600">Move events on the timeline with smooth, precise drag-and-drop. Easily adjust start and end dates by dragging the edges of any event. No accidental shifts—just pure control.</p>
         </div>
         <div className="bg-white rounded-2xl shadow-md p-6 border-t-4 border-blue-400">
           <h3 className="text-lg font-bold text-blue-800 mb-2">Smart Zoom &amp; Pan</h3>

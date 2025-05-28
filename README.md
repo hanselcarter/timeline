@@ -1,6 +1,30 @@
 # Interactive Timeline Component
 
-This project is an implementation of a component for visualizing events on a timeline. It's built with React, TypeScript, and Tailwind CSS.
+## Getting Started
+
+Follow these instructions to set up and run the project from scratch:
+
+### Prerequisites
+
+- **Node.js 20.x** must be installed. [Download Node.js 20 here.](https://nodejs.org/en/download)
+- **npm** (comes with Node.js)
+
+### Installation & Running
+
+```bash
+# 1. Clone the repository (if you haven't already)
+git clone https://github.com/hanselcarter/timeline.git
+cd timeline
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm run dev
+```
+
+- Open the local server URL shown in your terminal (usually http://localhost:5173).
+- You should now see the interactive timeline in your browser.
 
 ## Features
 
@@ -8,24 +32,18 @@ This project is an implementation of a component for visualizing events on a tim
 - Events with non-overlapping times share the same horizontal lane
 - Interactive zoom in/out functionality
 - Edit event names by double-clicking
-- Draggable events (basic implementation)
-- Tooltips showing event details on hover
+- Drag entire events to change their position on the timeline
+- Adjust start and end dates by dragging the left or right edges of any event
+
+## Known Issues
+
+- Tooltip implementation needs improvement
 
 ## Technology Stack
 
 - React (with TypeScript)
 - Tailwind CSS for styling
 - Vite as the build tool
-
-## How to Run
-
-```bash
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
 
 ## Project Structure
 
@@ -69,5 +87,3 @@ With more time, I would implement:
 - Performance tests for handling large datasets
 
 I would focus on testing edge cases like events with identical start/end times, extremely short or long events, and unusual date ranges.
-
-

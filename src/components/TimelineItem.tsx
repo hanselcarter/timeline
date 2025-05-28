@@ -26,34 +26,32 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   onStartEditing,
   timeRange,
 }) => {
-    const [editName, setEditName] = useState(item.name);
+  const [editName, setEditName] = useState(item.name);
 
-    const [isDragging, setIsDragging] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [dragType, setDragType] = useState<
     "move" | "resize-start" | "resize-end" | null
   >(null);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartLeft, setDragStartLeft] = useState(0);
   const [dragStartWidth, setDragStartWidth] = useState(0);
-  
-    const [hasMovedEnough, setHasMovedEnough] = useState(false);
 
-    const [tempLeft, setTempLeft] = useState<number | null>(null);
+  const [hasMovedEnough, setHasMovedEnough] = useState(false);
+
+  const [tempLeft, setTempLeft] = useState<number | null>(null);
   const [tempWidth, setTempWidth] = useState<number | null>(null);
 
-    const [showTooltip, setShowTooltip] = useState(false);
-
-    const itemRef = useRef<HTMLDivElement>(null);
+  const itemRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isEditing]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (itemRef.current) {
       const timeline = document.querySelector(".timeline") as HTMLDivElement;
       if (timeline) {
@@ -62,7 +60,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (dragType !== null) {
       document.addEventListener("mousemove", handleDocumentMouseMove);
       document.addEventListener("mouseup", handleDocumentMouseUp);
@@ -74,25 +72,24 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   }, [dragType]);
 
-    const handleMouseDown = (
+  const handleMouseDown = (
     e: React.MouseEvent,
     type: "move" | "resize-start" | "resize-end" = "move"
   ) => {
     if (isEditing) return;
 
-        e.stopPropagation();
+    e.stopPropagation();
     e.preventDefault();
 
-        setDragType(type);
+    setDragType(type);
     setDragStartX(e.clientX);
     setDragStartLeft(item.left);
     setDragStartWidth(item.width);
-    
-        setHasMovedEnough(false);
-    
-      };
 
-    const percentToDate = (percent: number): string => {
+    setHasMovedEnough(false);
+  };
+
+  const percentToDate = (percent: number): string => {
     try {
       if (!timeRange.startDate || !timeRange.endDate) return item.startDate;
 
@@ -244,8 +241,10 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
 
   const itemColor = getItemColor(item.name);
 
-  const actualLeft = tempLeft !== null && isDragging && hasMovedEnough ? tempLeft : item.left;
-  const actualWidth = tempWidth !== null && isDragging && hasMovedEnough ? tempWidth : item.width;
+  const actualLeft =
+    tempLeft !== null && isDragging && hasMovedEnough ? tempLeft : item.left;
+  const actualWidth =
+    tempWidth !== null && isDragging && hasMovedEnough ? tempWidth : item.width;
 
   return (
     <div
@@ -262,8 +261,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       onMouseDown={(e) => handleMouseDown(e, "move")}
       onMouseUp={handleMouseUp}
       onDoubleClick={() => onStartEditing(item.id)}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
       className={`timeline-item rounded-md p-2 shadow border ${itemColor} 
         ${isEditing ? "ring-2 ring-blue-400 z-10" : ""} 
         ${isDragging ? "shadow-xl outline outline-2 outline-blue-500" : ""} 
@@ -283,7 +280,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
 
       <div className="p-2 text-white h-full flex flex-col justify-between">
         <div className="timeline-date">
-          {formatDate(new Date(item.startDate))}
+          {formatDate(new Date(item.startDate))} {item.name}
         </div>
 
         {isEditing ? (
@@ -294,23 +291,12 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
             onChange={(e) => setEditName(e.target.value)}
             onBlur={handleSubmitEdit}
             onKeyDown={handleKeyDown}
-            className="w-full bg-transparent outline-none border-b border-white text-white font-medium"
+            className="w-full bg-transparent outline-none border-b border-white text-black font-medium"
           />
         ) : (
           <div className="font-medium text-white truncate">{item.name}</div>
         )}
       </div>
-
-      {showTooltip && (
-        <div className="absolute bottom-full left-0 mb-2 bg-gray-800 text-white p-2 rounded text-xs shadow-lg z-50 whitespace-nowrap">
-          <div>
-            <strong>Start:</strong> {formatDate(new Date(item.startDate))}
-          </div>
-          <div>
-            <strong>End:</strong> {formatDate(new Date(item.endDate))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

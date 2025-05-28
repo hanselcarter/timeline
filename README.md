@@ -66,7 +66,6 @@ I spent approximately 3-4 hours on this assignment, including planning, implemen
 
 ### What I Would Change
 
-- Implement more robust drag-and-drop functionality with actual date updates
 - Add the ability to create new events directly on the timeline
 - Improve performance for large numbers of events using virtualization
 - Add more customization options for colors, labels, etc.
@@ -84,6 +83,5 @@ With more time, I would implement:
 - Unit tests for utility functions using Jest
 - Component tests with React Testing Library
 - End-to-end tests for user interactions
-- Performance tests for handling large datasets
 
 I would focus on testing edge cases like events with identical start/end times, extremely short or long events, and unusual date ranges.

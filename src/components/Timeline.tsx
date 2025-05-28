@@ -40,13 +40,21 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => {
     }
   }, [items]);
   
-  // Handle zooming in and out
+  // Handle zooming in and out with standard increments
+  const zoomLevels = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 5];
+  
   const handleZoomIn = () => {
-    setZoomLevel(prev => Math.min(prev * 1.5, 5));
+    // Find the next higher zoom level
+    const currentIndex = zoomLevels.findIndex(level => level >= zoomLevel);
+    const nextIndex = Math.min(currentIndex + 1, zoomLevels.length - 1);
+    setZoomLevel(zoomLevels[nextIndex]);
   };
   
   const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev / 1.5, 0.5));
+    // Find the next lower zoom level
+    const currentIndex = zoomLevels.findIndex(level => level >= zoomLevel);
+    const prevIndex = Math.max(currentIndex - 1, 0); // Don't go below the minimum
+    setZoomLevel(zoomLevels[prevIndex]);
   };
   
   // Update timeline item
@@ -182,7 +190,8 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => {
           style={{ 
             width: `${100 * zoomLevel}%`, 
             height: `${containerHeight + 60}px`,
-            minWidth: '100%'
+            minWidth: '100%',
+            paddingRight: '20px' // Add a small padding to prevent edge cut-off
           }}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -198,7 +207,7 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => {
                 style={{ left: `${marker.left}%` }}
               >
                 <div className="h-3 w-px bg-gray-300"></div>
-                <div className="text-xs font-medium text-gray-700 mt-1 bg-white px-2 py-1 rounded-full shadow-sm border border-gray-200">
+                <div className="text-xs font-medium text-gray-700 mt-1 bg-white px-2 py-1 rounded-full shadow-sm border border-gray-200 whitespace-nowrap">
                   {marker.date}
                 </div>
               </div>

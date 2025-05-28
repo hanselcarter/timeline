@@ -35,10 +35,6 @@ npm run dev
 - Drag entire events to change their position on the timeline
 - Adjust start and end dates by dragging the left or right edges of any event
 
-## Known Issues
-
-- Tooltip implementation needs improvement
-
 ## Technology Stack
 
 - React (with TypeScript)
@@ -69,6 +65,7 @@ I spent approximately 3-4 hours on this assignment, including planning, implemen
 - Add the ability to create new events directly on the timeline
 - Improve performance for large numbers of events using virtualization
 - Add more customization options for colors, labels, etc.
+- Tooltip implementation
 
 ### Design Decisions
 

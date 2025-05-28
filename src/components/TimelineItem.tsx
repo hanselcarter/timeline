@@ -26,11 +26,9 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   onStartEditing,
   timeRange,
 }) => {
-  // State for editing the name
-  const [editName, setEditName] = useState(item.name);
+    const [editName, setEditName] = useState(item.name);
 
-  // State for drag operations
-  const [isDragging, setIsDragging] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
   const [dragType, setDragType] = useState<
     "move" | "resize-start" | "resize-end" | null
   >(null);
@@ -38,30 +36,24 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   const [dragStartLeft, setDragStartLeft] = useState(0);
   const [dragStartWidth, setDragStartWidth] = useState(0);
   
-  // Track if we've moved enough to start dragging (prevents unwanted movement on click)
-  const [hasMovedEnough, setHasMovedEnough] = useState(false);
+    const [hasMovedEnough, setHasMovedEnough] = useState(false);
 
-  // State for visual position during drag
-  const [tempLeft, setTempLeft] = useState<number | null>(null);
+    const [tempLeft, setTempLeft] = useState<number | null>(null);
   const [tempWidth, setTempWidth] = useState<number | null>(null);
 
-  // State for tooltip
-  const [showTooltip, setShowTooltip] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
 
-  // Refs
-  const itemRef = useRef<HTMLDivElement>(null);
+    const itemRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Focus input when editing starts
-  useEffect(() => {
+    useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isEditing]);
 
-  // Find the timeline container on mount
-  useEffect(() => {
+    useEffect(() => {
     if (itemRef.current) {
       const timeline = document.querySelector(".timeline") as HTMLDivElement;
       if (timeline) {
@@ -70,8 +62,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   }, []);
 
-  // Set up document event listeners for drag operations
-  useEffect(() => {
+    useEffect(() => {
     if (dragType !== null) {
       document.addEventListener("mousemove", handleDocumentMouseMove);
       document.addEventListener("mouseup", handleDocumentMouseUp);
@@ -83,32 +74,25 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   }, [dragType]);
 
-  // Start drag operation
-  const handleMouseDown = (
+    const handleMouseDown = (
     e: React.MouseEvent,
     type: "move" | "resize-start" | "resize-end" = "move"
   ) => {
     if (isEditing) return;
 
-    // Prevent the event from reaching the Timeline component
-    e.stopPropagation();
+        e.stopPropagation();
     e.preventDefault();
 
-    // Only set up for potential dragging, but don't start visual dragging yet
-    // We'll wait until the mouse moves past a threshold
-    setDragType(type);
+        setDragType(type);
     setDragStartX(e.clientX);
     setDragStartLeft(item.left);
     setDragStartWidth(item.width);
     
-    // Reset movement threshold
-    setHasMovedEnough(false);
+        setHasMovedEnough(false);
     
-    // Don't set isDragging or temp values yet - we'll do that after mouse movement
-  };
+      };
 
-  // Convert position percentage to date
-  const percentToDate = (percent: number): string => {
+    const percentToDate = (percent: number): string => {
     try {
       if (!timeRange.startDate || !timeRange.endDate) return item.startDate;
 
@@ -116,7 +100,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       const endMs = new Date(timeRange.endDate).getTime();
       const totalMs = endMs - startMs;
 
-      // Calculate date based on percentage
       const dateMs = startMs + (percent / 100) * totalMs;
       const date = new Date(dateMs);
 
@@ -127,45 +110,34 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   };
 
-  // Handle mouse movement during drag
   const handleDocumentMouseMove = (e: MouseEvent) => {
-    // Exit if no drag type is set or container ref is missing
     if (dragType === null || !containerRef.current) return;
-    
-    // Calculate how far the mouse has moved
+
     const deltaX = e.clientX - dragStartX;
-    
-    // Check if we've moved enough to start actual dragging
+
     if (!isDragging) {
-      if (Math.abs(deltaX) > 3) { // 3-pixel threshold
-        // Now we can officially start dragging
+      if (Math.abs(deltaX) > 3) {
         setIsDragging(true);
         setHasMovedEnough(true);
-        
-        // Initialize temp values to current position
+
         setTempLeft(item.left);
         setTempWidth(item.width);
       } else {
-        // Not moved enough yet, don't update visuals
         return;
       }
     }
-    
-    // Now proceed with drag calculations
+
     const containerWidth = containerRef.current.clientWidth;
     const deltaPercentage = (deltaX / containerWidth) * 100;
-    
-    // Update position based on drag type
+
     if (dragType === "move") {
-      // Move the entire item
       const newLeft = Math.max(
         0,
         Math.min(100 - dragStartWidth, dragStartLeft + deltaPercentage)
       );
       setTempLeft(newLeft);
     } else if (dragType === "resize-start") {
-      // Resize from the left (start date)
-      const maxResize = dragStartLeft + dragStartWidth - 5; // Ensure minimum width of 5%
+      const maxResize = dragStartLeft + dragStartWidth - 5;
       const newLeft = Math.max(
         0,
         Math.min(maxResize, dragStartLeft + deltaPercentage)
@@ -175,8 +147,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       setTempLeft(newLeft);
       setTempWidth(newWidth);
     } else if (dragType === "resize-end") {
-      // Resize from the right (end date)
-      const minWidth = 5; // Minimum width of 5%
+      const minWidth = 5;
       const newWidth = Math.max(
         minWidth,
         Math.min(100 - dragStartLeft, dragStartWidth + deltaPercentage)
@@ -186,20 +157,15 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   };
 
-  // Handle mouse up to complete drag operation
   const handleDocumentMouseUp = (e: MouseEvent) => {
-    // Prevent default behavior
     e.preventDefault();
     e.stopPropagation();
-    
-    // If we never started actual dragging, just clean up
+
     if (!isDragging) {
-      // Clean up drag state without making any visual changes
       setDragType(null);
       return;
     }
 
-    // Calculate new dates based on final position
     if (tempLeft !== null && tempWidth !== null && hasMovedEnough) {
       let newStartDate = item.startDate;
       let newEndDate = item.endDate;
@@ -218,7 +184,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
 
       console.log("New dates:", newStartDate, "to", newEndDate);
 
-      // Only update if dates have changed
       if (newStartDate !== item.startDate || newEndDate !== item.endDate) {
         onUpdateItem({
           ...item,
@@ -228,21 +193,18 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       }
     }
 
-    // Reset drag state
     setIsDragging(false);
     setDragType(null);
     setTempLeft(null);
     setTempWidth(null);
   };
 
-  // Direct mouse up handler for the item
   const handleMouseUp = (e: React.MouseEvent) => {
     if (!isDragging) return;
 
     e.stopPropagation();
     e.preventDefault();
 
-    // Use the native event with the document handler
     handleDocumentMouseUp(e.nativeEvent);
   };
 
@@ -259,19 +221,15 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
     }
   };
 
-  // Generate a consistent color based on item name
   const getItemColor = (name: string): string => {
-    // Simple hash function
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     hash = Math.abs(hash);
 
-    // Map to one of our predefined colors
     const colorIndex = hash % 6;
 
-    // Tailwind color classes
     const colors = [
       "bg-blue-100 border-blue-300 text-blue-800",
       "bg-green-100 border-green-300 text-green-800",
@@ -286,8 +244,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
 
   const itemColor = getItemColor(item.name);
 
-  // Calculate actual position, using temp values during drag or default values
-  // Only use temp values if we've actually moved enough to start dragging
   const actualLeft = tempLeft !== null && isDragging && hasMovedEnough ? tempLeft : item.left;
   const actualWidth = tempWidth !== null && isDragging && hasMovedEnough ? tempWidth : item.width;
 
@@ -313,14 +269,12 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
         ${isDragging ? "shadow-xl outline outline-2 outline-blue-500" : ""} 
         ${isDragging ? "cursor-grabbing" : "cursor-move"}`}
     >
-      {/* Resize handle for start date */}
       <div
         className="absolute top-0 left-0 w-4 h-full cursor-ew-resize z-10 hover:bg-white hover:bg-opacity-30"
         onMouseDown={(e) => handleMouseDown(e, "resize-start")}
         onClick={(e) => e.stopPropagation()}
       ></div>
 
-      {/* Resize handle for end date */}
       <div
         className="absolute top-0 right-0 w-4 h-full cursor-ew-resize z-10 hover:bg-white hover:bg-opacity-30"
         onMouseDown={(e) => handleMouseDown(e, "resize-end")}
